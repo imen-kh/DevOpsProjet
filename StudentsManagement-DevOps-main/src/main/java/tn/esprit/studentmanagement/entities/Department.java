@@ -20,6 +20,7 @@ public class Department {
     private String phone;
     private String head; // chef de département
 
+
     @OneToMany(mappedBy = "department")
     private List<Student> students;
 }
