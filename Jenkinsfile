@@ -26,6 +26,7 @@ pipeline {
             steps {
                 dir('StudentsManagement-DevOps-main') {
                     sh 'mvn test'
+                    sh 'mvn test -DskipTests'
                 }
             }
         }
