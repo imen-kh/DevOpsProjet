@@ -4,7 +4,7 @@ pipeline {
     // Définit les outils (à configurer dans Jenkins plus tard)
     tools {
         jdk 'JAVA_HOME'
-        maven 'M3' 
+        maven 'M2_HOME' 
     }
     
     stages {
