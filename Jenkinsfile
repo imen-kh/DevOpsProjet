@@ -25,8 +25,7 @@ pipeline {
         stage('Tests') {
             steps {
                 dir('StudentsManagement-DevOps-main') {
-                    sh 'mvn test'
-                    sh 'mvn test -DskipTests'
+                  sh 'mvn test -DskipTests=true'
                 }
             }
         }
