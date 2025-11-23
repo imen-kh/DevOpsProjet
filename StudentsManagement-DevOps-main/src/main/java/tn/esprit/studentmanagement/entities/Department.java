@@ -21,6 +21,7 @@ public class Department {
     private String head; // chef de département
 
 
+
     @OneToMany(mappedBy = "department")
     private List<Student> students;
 }
