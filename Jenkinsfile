@@ -1,12 +1,11 @@
 pipeline {
     agent any
-    
-    // Définit les outils (à configurer dans Jenkins plus tard)
+
     tools {
         jdk 'JAVA_HOME'
-        maven 'M2_HOME' 
+        maven 'M2_HOME'
     }
-    
+
     stages {
         stage('Récupération du code') {
             steps {
@@ -17,29 +16,35 @@ pipeline {
         
         stage('Compilation') {
             steps {
-                sh 'mvn clean compile'
+                dir('StudentsManagement-DevOps-main') {
+                    sh 'mvn clean compile'
+                }
             }
         }
         
         stage('Tests') {
             steps {
-                sh 'mvn test -Dmaven.test.skip=false'
+                dir('StudentsManagement-DevOps-main') {
+                    sh 'mvn test'
+                }
             }
         }
         
         stage('Packaging') {
             steps {
-                sh 'mvn clean install -Dmaven.test.skip=true'
+                dir('StudentsManagement-DevOps-main') {
+                    sh 'mvn clean package -DskipTests'
+                }
             }
         }
     }
     
     post {
         success {
-            echo "Build réussi ! Le JAR est généré."
+            echo "Pipeline terminé avec succès !"
         }
         failure {
-            echo "Échec du build."
+            echo "Échec du pipeline"
         }
     }
 }
