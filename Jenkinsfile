@@ -6,14 +6,24 @@ pipeline {
         maven 'M2_HOME'
     }
 
+    triggers {
+        pollSCM('* * * * *') // Vérifie chaque minute
+    }
+
     stages {
-        stage('Récupération du code') {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout Code') {
             steps {
                 git branch: 'main',
                     url: 'https://github.com/imen-kh/DevOpsProjet.git'
             }
         }
-        
+
         stage('Compilation') {
             steps {
                 dir('StudentsManagement-DevOps-main') {
@@ -21,15 +31,15 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Tests') {
             steps {
                 dir('StudentsManagement-DevOps-main') {
-                  sh 'mvn test -DskipTests=true'
+                    sh 'mvn test -DskipTests=true'
                 }
             }
         }
-        
+
         stage('Packaging') {
             steps {
                 dir('StudentsManagement-DevOps-main') {
@@ -37,14 +47,33 @@ pipeline {
                 }
             }
         }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dockerImage = docker.build("imen593/students-management:${env.BUILD_NUMBER}")
+                }
+            }
+        }
+
+        **stage('Push Docker Image') {**
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                        dockerImage.push()
+                        dockerImage.push('latest')
+                    }
+                }
+            }
+        }
     }
-    
+
     post {
         success {
-            echo "Pipeline terminé avec succès !"
+            echo "✅ Pipeline terminé avec succès !"
         }
         failure {
-            echo "Échec du pipeline"
+            echo "❌ Échec du pipeline"
         }
     }
 }
