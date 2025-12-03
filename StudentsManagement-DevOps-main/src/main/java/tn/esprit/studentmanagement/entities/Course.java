@@ -20,6 +20,7 @@ public class Course {
     private int credit;            // nombre de crédits
     private String description;
 
+
     @OneToMany(mappedBy = "course")
     private List<Enrollment> enrollments;
 
