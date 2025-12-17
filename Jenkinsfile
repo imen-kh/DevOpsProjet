@@ -14,19 +14,15 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                dir('StudentsManagement-DevOps-main') {
-                    sh '''
-                        mvn sonar:sonar \
-                          -Dsonar.projectKey=students-management \
-                          -Dsonar.projectName=StudentsManagement \
-                          -Dsonar.host.url=http://192.168.33.10:9000 \
-                          -Dsonar.login=$SONAR_TOKEN
-                    '''
-                }
+       stage('MVN SONARQUBE') {
+    steps {
+        dir('StudentsManagement-DevOps-main') {
+            withSonarQubeEnv('MySonarQube') {
+                sh 'mvn sonar:sonar'
             }
         }
+    }
+}
 
         stage('Docker Build & Push') {
             steps {
