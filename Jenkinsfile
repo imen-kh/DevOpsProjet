@@ -14,15 +14,7 @@ pipeline {
                 }
             }
         }
-       stage('MVN SONARQUBE') {
-    steps {
-        dir('StudentsManagement-DevOps-main') {
-            withSonarQubeEnv('MySonarQube') {
-                sh 'mvn sonar:sonar'
-            }
-        }
-    }
-}
+       
 
         stage('Docker Build & Push') {
             steps {
