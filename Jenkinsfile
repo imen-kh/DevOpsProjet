@@ -14,7 +14,7 @@ pipeline {
                 }
             }
         }
-       
+
 
         stage('Docker Build & Push') {
             steps {
@@ -32,6 +32,24 @@ pipeline {
             }
         }
     }
+    stage('SonarQube - Analyse de Code') {
+            steps {
+                echo 'Analyse de la qualité du code avec SonarQube...'
+                dir('StudentsManagement-DevOps-main') {
+                    withCredentials([string(credentialsId: 'SonarToken', variable: 'SONAR_TOKEN')]) {
+                        sh """
+                            mvn sonar:sonar \
+                                -Dsonar.projectKey=devops-projet \
+                                -Dsonar.projectName='DevOps Projet' \
+                                -Dsonar.host.url=http://sonarqube.devops.svc.cluster.local:9000 \
+                                -Dsonar.login=\$SONAR_TOKEN \
+                                -Dsonar.sources=src/main \
+                                -Dsonar.java.binaries=target/classes
+                        """
+                    }
+                }
+            }
+        }
 
     post {
         success {
