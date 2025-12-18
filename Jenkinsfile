@@ -26,26 +26,24 @@ pipeline {
             }
         }
         
-        // ← TON STAGE SONARQUBE ICI, BIEN À L'INTÉRIEUR DE stages { }
-        stage('SonarQube - Analyse de Code') {
-            steps {
-                echo 'Analyse de la qualité du code avec SonarQube...'
-                dir('StudentsManagement-DevOps-main') {
-                    withCredentials([string(credentialsId: 'SonarToken', variable: 'SONAR_TOKEN')]) {
-                        sh """
-                            mvn sonar:sonar \
-                                -Dsonar.projectKey=devops-projet \
-                                -Dsonar.projectName='DevOps Projet' \
-                                -Dsonar.host.url=http://sonarqube.devops.svc.cluster.local:9000 \
-                                -Dsonar.login=\$SONAR_TOKEN \
-                                -Dsonar.sources=src/main \
-                                -Dsonar.java.binaries=target/classes
-                        """
-                    }
-                }
+    stage('SonarQube - Analyse de Code') {
+    steps {
+        echo 'Analyse de la qualité du code avec SonarQube...'
+        dir('StudentsManagement-DevOps-main') {
+            withCredentials([string(credentialsId: 'SonarToken', variable: 'SONAR_TOKEN')]) {
+                sh """
+                    mvn sonar:sonar \
+                        -Dsonar.projectKey=devops-projet \
+                        -Dsonar.projectName='DevOps Projet' \
+                        -Dsonar.host.url=http://192.168.33.10:9000 \
+                        -Dsonar.login=\$SONAR_TOKEN \
+                        -Dsonar.sources=src/main \
+                        -Dsonar.java.binaries=target/classes
+                """
             }
         }
-    }  // ← Fin du bloc stages
+    }
+}
     
     post {
         success {
