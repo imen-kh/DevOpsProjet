@@ -25,7 +25,7 @@ pipeline {
                 }
             }
         }
-               stage('SonarQube - Analyse de Code') {
+        stage('SonarQube - Analyse de Code') {
             steps {
                 echo 'Analyse de la qualité du code avec SonarQube...'
                 dir('StudentsManagement-DevOps-main') {
@@ -44,6 +44,7 @@ pipeline {
                 }
             }
         }
+    }
     post {
         success {
             echo 'Pipeline terminé avec succès !'
