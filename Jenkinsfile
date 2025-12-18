@@ -1,10 +1,8 @@
 pipeline {
     agent any
-
     environment {
         DOCKERHUB = credentials('DOCKERHUB')
     }
-
     stages {
         stage('Checkout & Build') {
             steps {
@@ -14,25 +12,22 @@ pipeline {
                 }
             }
         }
-
-
         stage('Docker Build & Push') {
             steps {
                 dir('StudentsManagement-DevOps-main') {
                     sh '''
                         echo "Login avec $DOCKERHUB_USR ..."
                         echo "$DOCKERHUB_PSW" | docker login -u "$DOCKERHUB_USR" --password-stdin
-
                         docker build -t imen593/devopsprojet:latest .
                         docker push imen593/devopsprojet:latest
-
                         echo "IMAGE PUBLIÉE → https://hub.docker.com/r/imen593/devopsprojet"
                     '''
                 }
             }
         }
-    }
-    stage('SonarQube - Analyse de Code') {
+        
+        // ← TON STAGE SONARQUBE ICI, BIEN À L'INTÉRIEUR DE stages { }
+        stage('SonarQube - Analyse de Code') {
             steps {
                 echo 'Analyse de la qualité du code avec SonarQube...'
                 dir('StudentsManagement-DevOps-main') {
@@ -50,10 +45,14 @@ pipeline {
                 }
             }
         }
-
+    }  // ← Fin du bloc stages
+    
     post {
         success {
             echo 'success'
         }
+        failure {
+            echo 'Échec du pipeline'
+        }
     }
-}
+}  // ← Fin du pipeline
