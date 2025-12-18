@@ -25,32 +25,31 @@ pipeline {
                 }
             }
         }
-        
-    stage('SonarQube - Analyse de Code') {
-    steps {
-        echo 'Analyse de la qualité du code avec SonarQube...'
-        dir('StudentsManagement-DevOps-main') {
-            withCredentials([string(credentialsId: 'SonarToken', variable: 'SONAR_TOKEN')]) {
-                sh """
-                    mvn sonar:sonar \
-                        -Dsonar.projectKey=devops-projet \
-                        -Dsonar.projectName='DevOps Projet' \
-                        -Dsonar.host.url=http://192.168.33.10:9000 \
-                        -Dsonar.login=\$SONAR_TOKEN \
-                        -Dsonar.sources=src/main \
-                        -Dsonar.java.binaries=target/classes
-                """
+        stage('SonarQube - Analyse de Code') {
+            steps {
+                echo 'Analyse de la qualité du code avec SonarQube...'
+                dir('StudentsManagement-DevOps-main') {
+                    withCredentials([string(credentialsId: 'SonarToken', variable: 'SONAR_TOKEN')]) {
+                        sh """
+                            mvn sonar:sonar \\
+                                -Dsonar.projectKey=devops-projet \\
+                                -Dsonar.projectName='DevOps Projet' \\
+                                -Dsonar.host.url=http://192.168.33.10:9000 \\
+                                -Dsonar.login=\$SONAR_TOKEN \\
+                                -Dsonar.sources=src/main \\
+                                -Dsonar.java.binaries=target/classes
+                        """
+                    }
+                }
             }
         }
     }
-}
-    
     post {
         success {
-            echo 'success'
+            echo 'Pipeline terminé avec succès !'
         }
         failure {
             echo 'Échec du pipeline'
         }
     }
-}  // ← Fin du pipeline
+}
