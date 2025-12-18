@@ -25,7 +25,7 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube - Analyse de Code') {
+               stage('SonarQube - Analyse de Code') {
             steps {
                 echo 'Analyse de la qualité du code avec SonarQube...'
                 dir('StudentsManagement-DevOps-main') {
@@ -33,17 +33,17 @@ pipeline {
                         sh """
                             mvn sonar:sonar \\
                                 -Dsonar.projectKey=devops-projet \\
-                                -Dsonar.projectName='DevOps Projet' \\
+                                -Dsonar.projectName='DevOps Projet Imen' \\
                                 -Dsonar.host.url=http://192.168.33.10:9000 \\
                                 -Dsonar.login=\$SONAR_TOKEN \\
-                                -Dsonar.sources=src/main \\
-                                -Dsonar.java.binaries=target/classes
+                                -Dsonar.sources=src/main/java \\
+                                -Dsonar.java.binaries=target/classes \\
+                                -Dsonar.sourceEncoding=UTF-8
                         """
                     }
                 }
             }
         }
-    }
     post {
         success {
             echo 'Pipeline terminé avec succès !'
